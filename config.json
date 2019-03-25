@@ -3,9 +3,9 @@
     "include_top"     : false,
   
     "directory"       : "C:/Users/enqui/AppData/Local/Programs/Python/Python36/Thesis/repo/imception",
-    "train_path"      : "C:/Users/enqui/AppData/Local/Programs/Python/Python36/Thesis/repo/imception/training",
-    "test_path"       : "C:/Users/enqui/AppData/Local/Programs/Python/Python36/Thesis/repo/imception/test",
-    "validation_path" : "C:/Users/enqui/AppData/Local/Programs/Python/Python36/Thesis/repo/imception/validation",
+    "train_path"      : "/mydata/",
+    "test_path"       : "/mydata/",
+    "validation_path" : "/mydata/",
 
     "height"          : 224,
     "width"           : 224,
