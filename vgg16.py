@@ -9,6 +9,7 @@ from keras.callbacks import ModelCheckpoint
 import matplotlib.pyplot as plt
 from keras.preprocessing.image import ImageDataGenerator
 import json
+from datavisualisation import vis_dataset
 
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
@@ -16,11 +17,13 @@ session = tf.Session(config=config)
 
 with open('config.json') as f:
     conf = json.load(f)
+vis_dataset()
 
 vgg16_model = VGG16(weights=conf['weights'],
                     input_shape=(conf["height"], conf["width"], 3),
                     include_top=conf['include_top'])
-
+for layer in vgg16_model.layers[:-5]:
+    layer.trainable = False
 model = Sequential()
 for layer in vgg16_model.layers:
     model.add(layer)
@@ -29,14 +32,18 @@ model.add(layers.Flatten())
 model.add(layers.Dense(256, activation='relu'))
 model.add(layers.Dropout(0.5))
 model.add(layers.Dense(2, activation='softmax'))
-for layer in model.layers[:-7]:
-    layer.trainable = False
-for layer in model.layers[-7:]:
-    layer.trainable = True
-model.compile(optimizer=optimizers.Adam(lr=0.0001),
+
+# for layer in model.layers[:-4]:
+#     layer.trainable = False
+    
+# for layer in model.layers[-4:]:
+#     layer.trainable = True
+
+model.compile(optimizer=optimizers.SGD(lr=0.01, clipvalue=0.5),
               loss='categorical_crossentropy',
               metrics=['accuracy'])
-datagen = ImageDataGenerator(validation_split=conf['validation_split'])
+datagen = ImageDataGenerator(validation_split=conf['validation_split'],
+                             rescale=1. / 255)
 train_batches = datagen.flow_from_directory(conf['train_path'],
                                             target_size=(conf['height'], conf['width']),
                                             subset='training',
@@ -84,5 +91,5 @@ plt.plot(epoch, val_loss, 'v', label="Validation Loss")
 plt.legend()
 
 plt.show()
-fig.savefig('/accuracy-loss.jpg')
-plt.close(fig)
+fig.savefig(conf['directory'] + '/accuracy-loss.jpg')
+# plt.close(fig)
