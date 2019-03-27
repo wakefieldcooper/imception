@@ -9,7 +9,7 @@ from keras.callbacks import ModelCheckpoint
 import matplotlib.pyplot as plt
 from keras.preprocessing.image import ImageDataGenerator
 import json
-from datavisualisation import vis_dataset
+from datavisualisation import vis_dataset, file_calculations
 
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
@@ -17,41 +17,41 @@ session = tf.Session(config=config)
 
 with open('config.json') as f:
     conf = json.load(f)
-vis_dataset()
+# vis_dataset()
 
 vgg16_model = VGG16(weights=conf['weights'],
                     input_shape=(conf["height"], conf["width"], 3),
                     include_top=conf['include_top'])
-for layer in vgg16_model.layers[:-5]:
-    layer.trainable = False
+print('Model loaded.')
 model = Sequential()
 for layer in vgg16_model.layers:
     model.add(layer)
 
-model.add(layers.Flatten())
+model.add(layers.Flatten(input_shape=model.output_shape[1:]))
 model.add(layers.Dense(256, activation='relu'))
 model.add(layers.Dropout(0.5))
-model.add(layers.Dense(2, activation='softmax'))
+model.add(layers.Dense(1, activation='sigmoid'))
+model.summary()
 
-# for layer in model.layers[:-4]:
-#     layer.trainable = False
-    
-# for layer in model.layers[-4:]:
-#     layer.trainable = True
+for layer in model.layers[:15]:
+    layer.trainable = False
 
-model.compile(optimizer=optimizers.SGD(lr=0.01, clipvalue=0.5),
-              loss='categorical_crossentropy',
+
+model.compile(optimizer=optimizers.SGD(lr=1e-4, clipvalue=0.5, momentum=0.9),
+              loss='binary_crossentropy',
               metrics=['accuracy'])
 datagen = ImageDataGenerator(validation_split=conf['validation_split'],
                              rescale=1. / 255)
 train_batches = datagen.flow_from_directory(conf['train_path'],
                                             target_size=(conf['height'], conf['width']),
                                             subset='training',
-                                            batch_size=conf['batch_size'])
+                                            batch_size=conf['batch_size'],
+                                            class_mode='binary')
 valid_batches = datagen.flow_from_directory(conf['train_path'],
                                             target_size=(conf['height'], conf['width']),
                                             subset='validation',
-                                            batch_size=conf['batch_size'])
+                                            batch_size=conf['batch_size'],
+                                            class_mode='binary')
 # test_batches = datagen.flow_from_directory(conf['test_path'],
 #                                            target_size=(224, 224),
 #                                            batch_size=conf['batch_size'])
@@ -64,10 +64,14 @@ mc = ModelCheckpoint('best_model.h5',
                      mode='max',
                      verbose=1,
                      save_best_only=True)
-history = model.fit_generator(train_batches, validation_data=valid_batches,
+history = model.fit_generator(train_batches, 
+                              validation_data=valid_batches,
                               epochs=conf['epochs'],
+                              steps_per_epoch=(file_calculations()[0]//conf['batch_size'])*0.8,
+                              validation_steps=(file_calculations()[0]//conf['batch_size'])*0.2,
                               verbose=1,
-                              callbacks=[es])
+                              callbacks=[es]
+                              )
 model.save_weights('imception_weights_2.h5')
 
 # Setup plotting of history
@@ -81,13 +85,13 @@ epochs = range(1, len(acc)+1)
 plt.subplot(211)
 plt.title("Accuracy", pad=-40)
 plt.plot(epochs, acc, 'bo', label="Training Acc")
-plt.plot(epoch, val_acc, 'v', label="Validation Acc")
+plt.plot(epochs, val_acc, 'v', label="Validation Acc")
 plt.legend()
 
 plt.subplot(212)
 plt.title("Cross-Entropy Loss", pad=-40)
 plt.plot(epochs, loss, 'bo', label="Training loss")
-plt.plot(epoch, val_loss, 'v', label="Validation Loss")
+plt.plot(epochs, val_loss, 'v', label="Validation Loss")
 plt.legend()
 
 plt.show()
