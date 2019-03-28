@@ -36,7 +36,7 @@ def save_bottleneck_features():
         class_mode=None,
         shuffle=False)
     bottleneck_features_train = model.predict_generator(
-        generator, int(math.ceil(train_samples()[0] // conf['batch_size'])),
+        generator, int(math.ceil(train_samples()[0] / conf['batch_size'])),
         verbose=1) #hard code value as can't reference files file_calculations()[0]
     np.save('bottleneck_features_train_13gb.npy',
             bottleneck_features_train)
@@ -48,7 +48,7 @@ def save_bottleneck_features():
         class_mode=None,
         shuffle=False)
     bottleneck_features_validation = model.predict_generator(
-        generator, int(math.ceil(validation_samples()[0] // conf['batch_size'])),
+        generator, int(math.ceil(validation_samples()[0] / conf['batch_size'])),
         verbose=1) #file_calculations()[0]
     np.save('bottleneck_features_validation_13gb.npy',
             bottleneck_features_validation)
@@ -84,5 +84,5 @@ def train_top_model():
         verbose=1,
         validation_data=(validation_data, validation_labels))
     model.save_weights(top_model_weights_path)
-save_bottleneck_features()
+# save_bottleneck_features()
 train_top_model()
