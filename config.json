@@ -1,17 +1,3 @@
-{
-    "weights"         : "imagenet",
-    "include_top"     : false,
-  
-    "directory"       : "C:/Users/enqui/AppData/Local/Programs/Python/Python36/Thesis/repo/imception",
-    "train_path"      : "C:/Users/enqui/AppData/Local/Programs/Python/Python36/Thesis/repo/imception/new curated smaller/training",
-    "test_path"       : "C:/Users/enqui/AppData/Local/Programs/Python/Python36/Thesis/repo/imception/test",
-    "validation_path" : "C:/Users/enqui/AppData/Local/Programs/Python/Python36/Thesis/repo/imception/validation",
-
-    "height"          : 224,
-    "width"           : 224,
-    "validation_split": 0.20,
-    "seed"            : 9,
-    "num_classes"     : 2,
-    "batch_size"      : 16,
-    "epochs"          : 5
-  }
+version https://git-lfs.github.com/spec/v1
+oid sha256:7bfc84864231ef20d985838fab7ac267e0505ef08a85fa71b564dbc981d52b1d
+size 873
