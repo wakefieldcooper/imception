@@ -4,13 +4,16 @@ from keras import models
 from keras import layers
 from keras import optimizers
 from keras.models import Sequential, Model
-from keras.callbacks import EarlyStopping
+from keras.callbacks import EarlyStopping, TensorBoard, ModelCheckpoint
 from keras.models import model_from_json
 from keras.callbacks import ModelCheckpoint
 import matplotlib.pyplot as plt
 from keras.preprocessing.image import ImageDataGenerator
 import json
 from datavisualisation import vis_dataset, train_samples, validation_samples
+import time
+
+NAME = "imception-finetune-on-13gb-{}".format(int(time.time()))
 
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
@@ -18,6 +21,8 @@ session = tf.Session(config=config)
 
 top_model_weights_path = 'fc_model_13gb.h5'
 
+
+tensorboard = TensorBoard(log_dir='logs/{}'.format(NAME))
 
 with open('config.json') as f:
     conf = json.load(f)
@@ -88,7 +93,7 @@ history = model.fit_generator(
     steps_per_epoch=(train_samples()[0]//conf['batch_size']),
     validation_steps=(validation_samples()[0]//conf['batch_size']),
     verbose=1,
-    callbacks=[es]
+    callbacks=[es, tensorboard]
     )
 # serialize model to JSON
 model_json = model.to_json()
