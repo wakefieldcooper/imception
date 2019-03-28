@@ -4,13 +4,15 @@
   
     "directory"       : "C:/Users/enqui/AppData/Local/Programs/Python/Python36/Thesis/repo/imception",
     "train_path"      : "C:/Users/enqui/AppData/Local/Programs/Python/Python36/Thesis/repo/imception/new curated smaller/training",
+    // "train_path1"     : "/my_data/",
     "test_path"       : "C:/Users/enqui/AppData/Local/Programs/Python/Python36/Thesis/repo/imception/test",
-    "validation_path" : "C:/Users/enqui/AppData/Local/Programs/Python/Python36/Thesis/repo/imception/new curated smaller/validation",
+    "validation_path" : "C:/Users/enqui/AppData/Local/Programs/Python/Python36/Thesis/repo/imception/validation",
+
     "height"          : 224,
     "width"           : 224,
     "validation_split": 0.20,
     "seed"            : 9,
     "num_classes"     : 2,
-    "batch_size"      : 20,
-    "epochs"          : 23
-}
+    "batch_size"      : 32,
+    "epochs"          : 20
+  }

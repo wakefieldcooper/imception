@@ -5,3 +5,5 @@ validation/
 output/
 models/
 new curated smaller/
+bottleneck_features_train
+bottleneck_features_validation

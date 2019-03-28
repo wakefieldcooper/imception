@@ -5,12 +5,24 @@ import json
 
 with open('config.json') as f:
     conf = json.load(f)
-def file_calculations():
-    path_real, dirs_real, files_real = next(os.walk("C:/Users/enqui/AppData/Local/Programs/Python/Python36/Thesis/repo/imception/new curated smaller/training/real"))
-    path_fake, dirs_fake, files_fake = next(os.walk("C:/Users/enqui/AppData/Local/Programs/Python/Python36/Thesis/repo/imception/new curated smaller/training/fake"))
+
+
+def train_samples():
+    path_real, dirs_real, files_real = next(os.walk(conf['train_path'] + '/real'))
+    path_fake, dirs_fake, files_fake = next(os.walk(conf['train_path'] + '/fake'))
 
     file_count_real = len(files_real)
     file_count_fake = len(files_fake)
+    print(file_count_fake+file_count_real)
+    return file_count_fake+file_count_real, file_count_real, file_count_fake
+
+def validation_samples():
+    path_real, dirs_real, files_real = next(os.walk(conf['validation_path'] + '/real'))
+    path_fake, dirs_fake, files_fake = next(os.walk(conf['validation_path'] + '/fake'))
+
+    file_count_real = len(files_real)
+    file_count_fake = len(files_fake)
+    print(file_count_fake+file_count_real)
     return file_count_fake+file_count_real, file_count_real, file_count_fake
 def vis_dataset():
 
