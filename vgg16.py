@@ -13,7 +13,7 @@ import json
 from datavisualisation import vis_dataset, train_samples, validation_samples
 import time
 
-NAME = "imception-finetune-on-13gb-{}".format(int(time.time()))
+NAME = "imception-finetune-on-13gb-20epochs-{}".format(int(time.time()))
 
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
@@ -37,7 +37,7 @@ print('Model loaded.')
 # Building full connected classifier
 top_model = Sequential()
 top_model.add(layers.Flatten(input_shape=VGG_model.output_shape[1:]))
-top_model.add(layers.Dense(256, activation='relu'))
+top_model.add(layers.Dense(256, activation='relu')) 
 top_model.add(layers.Dropout(0.5))
 top_model.add(layers.Dense(1, activation='sigmoid'))
 
@@ -77,8 +77,8 @@ valid_batches = datagen.flow_from_directory(
     class_mode='binary'
     )
 
-es = EarlyStopping(monitor='val_loss',
-                   mode='min',
+es = EarlyStopping(monitor='val_acc',
+                   mode='max',
                    verbose=1,
                    patience=7)
 mc = ModelCheckpoint('best_model_13gb.h5',
@@ -93,7 +93,7 @@ history = model.fit_generator(
     steps_per_epoch=(train_samples()[0]//conf['batch_size']),
     validation_steps=(validation_samples()[0]//conf['batch_size']),
     verbose=1,
-    callbacks=[es, tensorboard]
+    callbacks=[tensorboard]
     )
 # serialize model to JSON
 model_json = model.to_json()
@@ -102,27 +102,3 @@ with open("finetuned_vgg16_13gb.json", "w") as json_file:
 # serialize weights to HDF5
 model.save_weights('imception_finetune_13gb.h5')
 print("[INFO] - Saved model to disk")
-
-# Setup plotting of history
-fig = plt.figure()
-acc = history.history['acc']
-val_acc = history.history['val_acc']
-loss = history.history['loss']
-val_loss = history.history['val_acc']
-
-epochs = range(1, len(acc)+1)
-plt.subplot(211)
-plt.title("Accuracy", pad=-40)
-plt.plot(epochs, acc, 'b-', label="Training Acc")
-plt.plot(epochs, val_acc, 'g-', label="Validation Acc")
-plt.legend()
-
-plt.subplot(212)
-plt.title("Cross-Entropy Loss", pad=-40)
-plt.plot(epochs, loss, 'r--', label="Training loss")
-plt.plot(epochs, val_loss, 'k--', label="Validation Loss")
-plt.legend()
-
-plt.show()
-fig.savefig(conf['directory'] + '/accuracy-loss_13gb.jpg')
-# plt.close(fig)
