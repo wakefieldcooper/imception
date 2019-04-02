@@ -4,11 +4,11 @@ The exploration of PAD using deep learning
 ## Usage
 ### Bottleneck Features
 ```
-python bottleneck_features.py
+python bottleneck_features_imception.py
 ```
 ### Fine Tune Model
 ```
-python vgg16.py
+python finetune_imception.py
 ```
 ### Visualise Data Balance
 ```
