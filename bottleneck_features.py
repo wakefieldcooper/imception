@@ -84,5 +84,5 @@ def train_top_model():
         verbose=1,
         validation_data=(validation_data, validation_labels))
     model.save_weights(top_model_weights_path)
-# save_bottleneck_features()
+save_bottleneck_features()
 train_top_model()
