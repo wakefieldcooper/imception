@@ -19,6 +19,8 @@ from sklearn.metrics import cohen_kappa_score
 from sklearn.metrics import roc_auc_score
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import precision_recall_fscore_support
+import matplotlib.pyplot as plt
+import itertools
 np.set_printoptions(suppress=True)
 
 with open('config.json') as f:
@@ -101,9 +103,39 @@ def generate_scores():
     predictions = np.concatenate(predictions, axis=0)
     predictions = predictions.astype(int)
     val_trues = (test_generator.classes)
-    
-    precisions, recall, f1_score, _ = precision_recall_fscore_support(val_trues, predictions, average='binary')
-    # reduce to 1d array
+
+    cf = confusion_matrix(val_trues, predictions)
+    precisions, recall, f1_score, _ = precision_recall_fscore_support(
+        val_trues, predictions, average='binary'
+        )
+    # plt.matshow(cf)
+    # plt.title('Confusion Matrix Plot')
+    # plt.colorbar()
+    # plt.xlabel('Precited')
+    # plt.ylabel('Actual')
+    # plt.show()
+    plt.imshow(cf, cmap=plt.cm.Blues, interpolation='nearest')
+    plt.colorbar()
+    plt.title('Confusion Matrix without Normalization')
+    plt.xlabel('Predicted\n  F1 Score: {0:.3f}%'.format(f1_score*100))
+    plt.ylabel('Actual')
+    tick_marks = np.arange(len(set(val_trues)))  # length of classes
+    class_labels = ['Fake', 'Real']
+    tick_marks
+    plt.xticks(tick_marks, class_labels)
+    plt.yticks(tick_marks, class_labels)
+    # plotting text value inside cells
+    thresh = cf.max() / 2.
+    for i, j in itertools.product(range(cf.shape[0]), range(cf.shape[1])):
+        plt.text(
+            j, i, format(cf[i, j], 'd'),
+            horizontalalignment='center',
+            color='white' if cf[i, j] > thresh else 'black'
+            )
+    plt.show()
+
     print('F1 score: %f' % f1_score)
+    print('Recall Score: %f' % recall)
+    print('precisions: %f' % precisions) 
 generate_scores()
 
