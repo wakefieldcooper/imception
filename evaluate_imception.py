@@ -137,5 +137,6 @@ def generate_scores():
     print('F1 score: %f' % f1_score)
     print('Recall Score: %f' % recall)
     print('precisions: %f' % precisions) 
-generate_scores()
+# generate_scores()
+single_image()
 
