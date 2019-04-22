@@ -1,5 +1,5 @@
 # imception
-The exploration of PAD using deep learning
+The exploration of PAD using fine tuned deep convolutional neural networks
 
 ## Usage
 ### Bottleneck Features
