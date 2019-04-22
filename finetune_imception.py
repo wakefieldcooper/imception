@@ -50,7 +50,7 @@ top_model.load_weights(top_model_weights_path)
 print("[INFO] - Adding top layer")
 # model.add(top_model)
 model = Model(input=VGG_model.input, output=top_model(VGG_model.output))
-
+model.summary()
 
 # Set up to the last Conv block as non-trainable
 # This will preserve weights in these layers
