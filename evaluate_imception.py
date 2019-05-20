@@ -28,7 +28,7 @@ with open('config.json') as f:
 
 # load the image
 def single_image():
-    for file in glob.glob("C:/Users/enqui/AppData/Local/Programs/Python/Python36/Thesis/repo/imception/*.jpg"):
+    for file in glob.glob("C:/Users/enqui/AppData/Local/Programs/Python/Python36/Thesis/repo/imception/demo_images/ *.jpg"):
         image = cv2.imread(file)
         orig = image.copy()
             
