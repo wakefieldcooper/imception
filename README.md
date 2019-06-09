@@ -26,5 +26,5 @@ python evaluate_imception.py
 ```
 
 ## Brief summary
-Uses the VGG16 pre-trained network, evaluates convolutional base on the dataset and converts to a numpy array, then feeds these numpy's for train and val into the FC layer. This is for computational efficiency. Creates a .h5 file for the weights of this, which is then fed into the final model for updating or fine tuning. This is done by freezing (weights set and can't be updated) all layers up until the last convolutional block (conv_5 block: layer 15) and adding our own FC layer on top for the classification task. The weights of the bottleneck training is then loaded in to model and then fine tuned on the unfrozen layers. 
+Uses the VGG16 pre-trained network, evaluates convolutional base on the dataset and converts to a numpy array, then feeds these numpy's for train and val into the FC layer. This is for computational efficiency. Creates a .h5 file for the weights of this, which is then fed into the final model for updating or fine tuning. This is done by freezing (weights set and can't be updated) all layers up until the last convolutional block (conv_5 block: layer 15) and adding our own fully connected layer on top for the classification task. The weights of the bottleneck training is then loaded in to model and then fine tuned on the unfrozen layers. 
 
