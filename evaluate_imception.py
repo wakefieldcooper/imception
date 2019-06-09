@@ -28,7 +28,7 @@ with open('config.json') as f:
 
 # load the image
 def single_image():
-    for file in glob.glob("C:/Users/enqui/AppData/Local/Programs/Python/Python36/Thesis/repo/imception/demo_images/ *.jpg"):
+    for file in glob.glob("C:/Users/enqui/AppData/Local/Programs/Python/Python36/Thesis/repo/imception/demo_images/*.jpg"):
         image = cv2.imread(file)
         orig = image.copy()
             
@@ -55,7 +55,7 @@ def single_image():
         label = "{}".format(label)
 
         # draw the label on the image
-        output = imutils.resize(orig, width=224)
+        output = imutils.resize(orig, width=400)
         cv2.putText(output, label, (10, 25),  cv2.FONT_HERSHEY_SIMPLEX,
             0.7, (0, 255, 0), 2)
 
